@@ -15,12 +15,12 @@ import { visitas_sup                 } from './table-visitas_sup';
 import { personas_sup                } from './table-personas_sup';
 import { datos_control               } from './table-datos_control';
 import { rea_anticuerpos             } from './table-rea_anticuerpos';
-import { comunas_carto } from "./table-comunas_carto";
-import { manzanas } from "./table-manzanas";
-import { radios } from "./table-radios";
-import { fracciones } from "./table-fracciones";
-import { control_resumen_traspuesta } from "./table-control_resumen_traspuesta";
-import { barrios } from "./table-barrios";
+import { comunas_carto               } from "./table-comunas_carto";
+import { manzanas                    } from "./table-manzanas";
+import { radios                      } from "./table-radios";
+import { fracciones                  } from "./table-fracciones";
+import { control_resumen_traspuesta  } from "./table-control_resumen_traspuesta";
+import { barrios                     } from "./table-barrios";
 
 const APP_DM_VERSION="#24-08-12";
 
