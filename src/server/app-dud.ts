@@ -15,12 +15,7 @@ import { visitas_sup                 } from './table-visitas_sup';
 import { personas_sup                } from './table-personas_sup';
 import { datos_control               } from './table-datos_control';
 import { rea_anticuerpos             } from './table-rea_anticuerpos';
-import { comunas_carto               } from "./table-comunas_carto";
-import { manzanas                    } from "./table-manzanas";
-import { radios                      } from "./table-radios";
-import { fracciones                  } from "./table-fracciones";
 import { control_resumen_traspuesta  } from "./table-control_resumen_traspuesta";
-import { barrios                     } from "./table-barrios";
 
 const APP_DM_VERSION="#24-08-12";
 
@@ -83,11 +78,6 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
         var menuControles =super.getMenuControles(context);
         menuControles.splice(2,0, {menuType:'table', name:'resumen (traspuesta)', table: 'control_resumen_traspuesta'})
         menuControles.push( {menuType:'table', name:'datos', table: 'datos_control'});
-        menuControles.push( {menuType:'table', name:'barrios', table: 'barrios'});
-        menuControles.push( {menuType:'table', name:'comunas', table: 'comunas_carto'});
-        menuControles.push( {menuType:'table', name:'fracciones', table: 'fracciones'});
-        menuControles.push( {menuType:'table', name:'radios', table: 'radios'});
-        menuControles.push( {menuType:'table', name:'manzanas', table: 'manzanas'});
         
        // menuControles.push( {menuType:'table', name:'reas resultados anticuerpos', table: 'rea_anticuerpos'});
         //console.log('longitud ',menuControles.length)
@@ -110,12 +100,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             personas_sup,
             datos_control,
             control_resumen_traspuesta,
-            rea_anticuerpos,
-            barrios,
-            comunas_carto,
-            fracciones,
-            radios,
-            manzanas
+            rea_anticuerpos
         }
 
         be.appendToTableDefinition('grilla_hoja_ruta',function(tableDef:TableDefinition, _context?:TableContext){
