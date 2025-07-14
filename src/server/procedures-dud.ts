@@ -3,10 +3,11 @@
 import { ProcedureDef, TableDefinition, Client, ProcedureContext, CoreFunctionParameters } from "./types-dud";
 import {json, jsono} from "pg-promise-strict";
 import { setHdrQuery, getOperativoActual } from "dmencu/dist/server/server/procedures-dmencu"
+import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
 
 //import { hogares } from "./table-hogares";
 
-setHdrQuery((quotedCondViv:string)=>{
+setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, _permiteGenerarMuestra:boolean)=>{
     return `
     with viviendas as 
         (select t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
@@ -39,7 +40,7 @@ setHdrQuery((quotedCondViv:string)=>{
             group by t.operativo, t.enc, t.json_encuesta, t.resumen_estado, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
         )
         select jsonb_build_object(
-                'viviendas', ${jsono(
+                ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
                     `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from viviendas`,
                     'enc',
                     `otras || coalesce(respuestas,'{}'::jsonb)`
