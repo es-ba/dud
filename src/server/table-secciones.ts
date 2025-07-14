@@ -4,7 +4,7 @@ import {TableDefinition, TableContext, FieldDefinition} from "./types-dud";
 
 export const seccion: FieldDefinition = {
     name: 'seccion', 
-    typeName: 'integer', 
+    typeName: 'text', 
     title: 'seccion'
 }
 
@@ -18,9 +18,6 @@ export function secciones(context:TableContext):TableDefinition {
             seccion,
             {name:'numero'                  , typeName:'text'},
         ],
-        primaryKey:[seccion.name],
-        constraints: [
-            {constraintType: 'unique', fields: [seccion.name]},
-        ],
+        primaryKey:[seccion.name]
     };
 }
