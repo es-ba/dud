@@ -40,7 +40,7 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
             group by t.operativo, t.enc, t.json_encuesta, t.resumen_estado, dominio, nomcalle,sector,edificio, entrada, nrocatastral, piso,departamento,habitacion,casa,reserva,tt.carga_observaciones, cita, t.area, tt.tarea, fecha_asignacion, asignado, main_form
         )
         select jsonb_build_object(
-                ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
+            ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
                     `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from viviendas`,
                     'enc',
                     `otras || coalesce(respuestas,'{}'::jsonb)`
