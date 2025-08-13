@@ -17,6 +17,11 @@ import { datos_control               } from './table-datos_control';
 import { rea_anticuerpos             } from './table-rea_anticuerpos';
 import { control_resumen_traspuesta  } from "./table-control_resumen_traspuesta";
 
+import { dominios                    } from "./table-dominios";
+import { muestras                    } from "./table-muestras";
+import { muestra_manzanas            } from "./table-muestra_manzanas";
+import { proyectos_estadisticos      } from "./table-proyectos_estadisticos";
+
 const APP_DM_VERSION="#24-08-12";
 
 export type Constructor<T> = new(...args: any[]) => T;
@@ -84,7 +89,18 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
         return menuControles
      }
     getMenu(context:Context){
-        return super.getMenu(context);
+        let menu = super.getMenu(context);
+        menu.menu.splice(0,0,
+            {menuType:'table', name:'muestras'},
+            {menuType:'table', name:'dominios'},
+            {menuType:'table', name:'proyectos_estadisticos'},
+            {menuType:'table', name:'comunas'},
+            {menuType:'table', name:'barrios'},
+            {menuType:'table', name:'fracciones'},
+            {menuType:'table', name:'radios'},
+
+        )
+        return menu;
     }
     prepareGetTables(){
         var be=this;
@@ -100,7 +116,11 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             personas_sup,
             datos_control,
             control_resumen_traspuesta,
-            rea_anticuerpos
+            rea_anticuerpos,
+            dominios,
+            proyectos_estadisticos,
+            muestra_manzanas,
+            muestras
         }
 
         be.appendToTableDefinition('grilla_hoja_ruta',function(tableDef:TableDefinition, _context?:TableContext){
