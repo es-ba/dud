@@ -15,13 +15,13 @@ export function muestra_manzanas(context:TableContext):TableDefinition {
             {name:'fraccion'          , typeName:'text'},
             {name:'radio'             , typeName:'text'},
             {name:'manzana'           , typeName:'text'},
-            {name:'dominio'           , typeName:'text'},
+            {name:'relevamiento'      , typeName:'text'},
             //falta definir estados            
         ],
         primaryKey:['muestra','comuna', 'fraccion', 'radio', 'manzana'],
         foreignKeys:[
             {references:'manzanas', fields:['comuna', 'fraccion', 'radio', 'manzana']},
-            {references:'dominios', fields:['dominio']}
+            {references:'relevamientos', fields:['relevamiento']}
         ],       
     };
 }

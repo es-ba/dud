@@ -17,7 +17,7 @@ import { datos_control               } from './table-datos_control';
 import { rea_anticuerpos             } from './table-rea_anticuerpos';
 import { control_resumen_traspuesta  } from "./table-control_resumen_traspuesta";
 
-import { dominios                    } from "./table-dominios";
+import { relevamientos                } from "./table-relevamientos";
 import { muestras                    } from "./table-muestras";
 import { muestra_manzanas            } from "./table-muestra_manzanas";
 import { proyectos_estadisticos      } from "./table-proyectos_estadisticos";
@@ -117,7 +117,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             datos_control,
             control_resumen_traspuesta,
             rea_anticuerpos,
-            dominios,
+            relevamientos,
             proyectos_estadisticos,
             muestra_manzanas,
             muestras
