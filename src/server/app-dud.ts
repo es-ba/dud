@@ -92,7 +92,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
         let menu = super.getMenu(context);
         menu.menu.splice(0,0,
             {menuType:'table', name:'muestras'},
-            {menuType:'table', name:'dominios'},
+            {menuType:'table', name:'relevamientos'},
             {menuType:'table', name:'proyectos_estadisticos'},
             {menuType:'table', name:'comunas'},
             {menuType:'table', name:'barrios'},
