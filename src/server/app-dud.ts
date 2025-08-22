@@ -14,9 +14,6 @@ import { personas                    } from './table-personas';
 import { visitas_sup                 } from './table-visitas_sup';
 import { personas_sup                } from './table-personas_sup';
 import { datos_control               } from './table-datos_control';
-import { rea_anticuerpos             } from './table-rea_anticuerpos';
-import { control_resumen_traspuesta  } from "./table-control_resumen_traspuesta";
-
 import { relevamientos                } from "./table-relevamientos";
 import { muestras                    } from "./table-muestras";
 import { muestra_manzanas            } from "./table-muestra_manzanas";
@@ -81,24 +78,19 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
     }
     override getMenuControles(context:Context){
         var menuControles =super.getMenuControles(context);
-        menuControles.splice(2,0, {menuType:'table', name:'resumen (traspuesta)', table: 'control_resumen_traspuesta'})
-        menuControles.push( {menuType:'table', name:'datos', table: 'datos_control'});
-        
-       // menuControles.push( {menuType:'table', name:'reas resultados anticuerpos', table: 'rea_anticuerpos'});
-        //console.log('longitud ',menuControles.length)
         return menuControles
-     }
+    }
+
     getMenu(context:Context){
         let menu = super.getMenu(context);
         menu.menu.splice(0,0,
             {menuType:'table', name:'muestras'},
+            
+        )
+        let menuConfig = menu.menu.find((item)=>item.name == 'configurar')!
+        menuConfig.menuContent.push(
             {menuType:'table', name:'relevamientos'},
-            {menuType:'table', name:'proyectos_estadisticos'},
-            {menuType:'table', name:'comunas'},
-            {menuType:'table', name:'barrios'},
-            {menuType:'table', name:'fracciones'},
-            {menuType:'table', name:'radios'},
-
+            {menuType:'table', name:'proyectos_estadisticos'}
         )
         return menu;
     }
@@ -115,8 +107,6 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             visitas_sup,
             personas_sup,
             datos_control,
-            control_resumen_traspuesta,
-            rea_anticuerpos,
             relevamientos,
             proyectos_estadisticos,
             muestra_manzanas,

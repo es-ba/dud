@@ -22,7 +22,7 @@ export function datos_control(context:TableContext):TableDefinition {
             "typeName": "bigint",
             "nullable": true
         },
-        {name:'nrocomuna'            , typeName:'integer' , editable: false  },
+        {name:'nrocomuna'            , typeName:'text' , editable: false  },
        // {name:'codcalle'             , typeName:'integer' , editable: false  },
         {name:'nomcalle'             , typeName:'text'    , editable: false  },
         {name:'nrocatastral'         , typeName:'integer' , editable: false  },
