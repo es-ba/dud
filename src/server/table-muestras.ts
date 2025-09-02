@@ -10,6 +10,7 @@ export function muestras(context:TableContext):TableDefinition {
         elementName:'muestra',
         editable:esEditable,
         fields:[
+            {name:'operativo'             , typeName: "text"   , nullable: false, editable: false},
             {name:'muestra'               , typeName:'bigint', sequence:{prefix:null, firstValue:10001, name:'muestras_seq' }, nullable:true, editable:false   },
             {name:'nombre'                , typeName:'text'},
             {name:'proyecto_estadistico'  , typeName:'text', nullable:false},            
@@ -19,10 +20,10 @@ export function muestras(context:TableContext):TableDefinition {
             {name:'verificado'            , typeName:'boolean'},
             //falta definir estados
         ],
-        primaryKey:['muestra'],
-        foreignKeys:[{references:'proyectos_estadisticos', fields:['proyecto_estadistico']}],
+        primaryKey:['operativo','muestra'],
+        foreignKeys:[{references:'proyectos_estadisticos', fields:['operativo','proyecto_estadistico']}],
         detailTables: [
-            {table: "muestra_manzanas", fields: ["muestra"], abr: "man", label:"manzanas"}
+            {table: "areas", fields: ["operativo","muestra"], abr: "man", label:"manzanas"}
         ],
     };
 }

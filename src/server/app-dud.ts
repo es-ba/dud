@@ -16,7 +16,6 @@ import { personas_sup                } from './table-personas_sup';
 import { datos_control               } from './table-datos_control';
 import { relevamientos                } from "./table-relevamientos";
 import { muestras                    } from "./table-muestras";
-import { muestra_manzanas            } from "./table-muestra_manzanas";
 import { proyectos_estadisticos      } from "./table-proyectos_estadisticos";
 
 const APP_DM_VERSION="#24-08-12";
@@ -83,15 +82,17 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
 
     getMenu(context:Context){
         let menu = super.getMenu(context);
-        menu.menu.splice(0,0,
-            {menuType:'table', name:'muestras'},
-            
-        )
-        let menuConfig = menu.menu.find((item)=>item.name == 'configurar')!
-        menuConfig.menuContent.push(
-            {menuType:'table', name:'relevamientos'},
-            {menuType:'table', name:'proyectos_estadisticos'}
-        )
+        if(this.config.server.policy!='web'){
+            menu.menu.splice(0,0,
+                {menuType:'table', name:'muestras'},
+                
+            )
+            let menuConfig = menu.menu.find((item)=>item.name == 'configurar')!
+            menuConfig.menuContent.push(
+                {menuType:'table', name:'relevamientos'},
+                {menuType:'table', name:'proyectos_estadisticos'}
+            )
+        }
         return menu;
     }
     prepareGetTables(){
@@ -100,6 +101,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
         delete(this.getTableDefinition['hogares']);
         delete(this.getTableDefinition['hogares_sup']);
         this.getTableDefinition={
+            muestras,
             ...this.getTableDefinition,
             viviendas,
             visitas,
@@ -108,9 +110,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             personas_sup,
             datos_control,
             relevamientos,
-            proyectos_estadisticos,
-            muestra_manzanas,
-            muestras
+            proyectos_estadisticos
         }
 
         be.appendToTableDefinition('grilla_hoja_ruta',function(tableDef:TableDefinition, _context?:TableContext){
@@ -164,8 +164,47 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             );
         })
         be.appendToTableDefinition('areas', function(tableDef){
-            tableDef.selfRefresh = true;
-            tableDef.refrescable = true;
+            tableDef.fields = tableDef.fields.filter((field)=>field.name != 'comuna'); //quito comuna que viene de dmencu
+            let areaField = tableDef.fields.find((field)=>field.name=='area')!;
+            areaField.sequence = {prefix:undefined, firstValue:1, name:'areas_seq' };
+            areaField.nullable = true;
+            tableDef.fields.splice(2,0,
+                {name:'muestra'           , typeName:'bigint'},
+                {name:'comuna'            , typeName:'text', nullable:false},
+                {name:'fraccion'          , typeName:'text', nullable:false},
+                {name:'radio'             , typeName:'text', nullable:false},
+                {name:'manzana'           , typeName:'text', nullable:false},
+                {name:'relevamiento'      , typeName:'text'},
+            );
+            tableDef.hiddenColumns = (tableDef.hiddenColumns || []).concat('area');
+            tableDef.title = 'muestra_manzanas (areas)';
+            tableDef.sortColumns = [
+                {column: 'comuna'   },
+                {column: 'fraccion' },
+                {column: 'radio'    },
+                {column: 'manzana'  },
+            ]
+            if(tableDef.sql?.from){
+                tableDef.sql.from = tableDef.sql.from.replace('as comuna', 'as auxcomuna');
+            }
+            tableDef.foreignKeys = (tableDef.foreignKeys || []).concat(
+                {references:'muestras', fields:['operativo','muestra']},
+                {references:'manzanas', fields:['comuna', 'fraccion', 'radio', 'manzana']},
+                {references:'relevamientos', fields:['relevamiento']}
+            )
+            tableDef.constraints = (tableDef.constraints || []).concat(
+                {constraintType:'unique', consName:"manzanas_areas_uk", fields:['operativo','muestra','comuna', 'fraccion', 'radio', 'manzana']},
+            )
+        });
+        be.appendToTableDefinition('areas_asignacion_general', function(tableDef){
+            //tableDef.selfRefresh = true;
+            //tableDef.refrescable = true;
+            if(tableDef.sql?.from){
+                tableDef.sql.from = tableDef.sql.from.replace('as comuna', 'as auxcomuna');
+            }
+            //tableDef.constraints = (tableDef.constraints || []).concat(
+            //    {constraintType:'unique', consName:"manzana_tareas_areas_uk", fields:['operativo','tarea','comuna', 'fraccion', 'radio', 'manzana']},
+            //)
         });
     }
   }

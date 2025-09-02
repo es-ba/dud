@@ -9,12 +9,13 @@ export function proyectos_estadisticos(context:TableContext):TableDefinition {
         elementName:'proyecto_estadistico',
         editable:esEditable,
         fields:[
+            {name:'operativo'             , typeName:'text'   , nullable: false, editable: false},
             {name:'proyecto_estadistico'  , typeName:'text'},
             {name:'nombre'                , typeName:'text'},
         ],
-        primaryKey:['proyecto_estadistico'],
+        primaryKey:['operativo','proyecto_estadistico'],
         detailTables: [
-            {table: "muestras", fields: ["proyecto_estadistico"], abr: "p", label:"muestras"}
+            {table: "muestras", fields: ["operativo", "proyecto_estadistico"], abr: "p", label:"muestras"}
         ],
     };
 }
