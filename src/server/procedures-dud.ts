@@ -7,9 +7,9 @@ import { IdUnidadAnalisis } from "dmencu/dist/server/unlogged/tipos";
 
 //import { hogares } from "./table-hogares";
 
-setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, _permiteGenerarMuestra:boolean)=>{
+setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrincipal:IdUnidadAnalisis, permiteGenerarMuestra:boolean)=>{
     return `
-    with viviendas as 
+    with ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} as 
         (select t.enc, t.json_encuesta as respuestas, t.resumen_estado as "resumenEstado", 
             jsonb_build_object(
                 'dominio'       , dominio       ,
@@ -41,18 +41,22 @@ setHdrQuery((quotedCondViv:string, context: ProcedureContext, unidadAnalisisPrin
         )
         select jsonb_build_object(
             ${context.be.db.quoteLiteral(unidadAnalisisPrincipal)}, ${jsono(
-                    `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from viviendas`,
+                    `select enc, respuestas, jsonb_build_object('resumenEstado',"resumenEstado") as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
                     'enc',
                     `otras || coalesce(respuestas,'{}'::jsonb)`
                 )}
             ) as respuestas,
             ${json(`
-                select area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha
-                    from viviendas inner join areas using (area) 
-                    group by area, observaciones_hdr`, 
-                'fecha')} as cargas,
+                select a.area as carga, observaciones_hdr as observaciones, min(fecha_asignacion) as fecha, ta.recepcionista
+                    from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)} aux inner join areas a using (area) inner join tareas_areas ta on (a.area = ta.area and aux.tarea->>'tarea' = ta.tarea)
+                    group by a.area, observaciones_hdr, ta.recepcionista 
+                ${permiteGenerarMuestra?`
+                    union -- este union permite visualizar areas asignadas sin encuestas generadas
+                    select area as carga, null as observaciones, null as fecha, recepcionista
+                        from tareas_areas where asignado = ${context.be.db.quoteLiteral(context.user.idper)} and tarea = 'encu'`:''}
+                `,'fecha')} as cargas,
             ${jsono(
-                `select enc, jsonb_build_object('tem', tem, 'tarea', tarea ) as otras from viviendas`,
+                `select enc, jsonb_build_object('tem', tem, 'tarea', tarea ) as otras from ${context.be.db.quoteIdent(unidadAnalisisPrincipal)}`,
                     'enc',
                     `otras ||'{}'::jsonb`
                 )}
