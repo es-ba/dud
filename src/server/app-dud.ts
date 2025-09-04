@@ -14,8 +14,9 @@ import { personas                    } from './table-personas';
 import { visitas_sup                 } from './table-visitas_sup';
 import { personas_sup                } from './table-personas_sup';
 import { datos_control               } from './table-datos_control';
-import { relevamientos                } from "./table-relevamientos";
+import { relevamientos               } from "./table-relevamientos";
 import { muestras                    } from "./table-muestras";
+import { muestra_manzanas            } from "./table-muestra_manzanas";
 import { proyectos_estadisticos      } from "./table-proyectos_estadisticos";
 
 const APP_DM_VERSION="#24-08-12";
@@ -101,8 +102,9 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
         delete(this.getTableDefinition['hogares']);
         delete(this.getTableDefinition['hogares_sup']);
         this.getTableDefinition={
-            muestras,
+            muestra_manzanas,
             ...this.getTableDefinition,
+            muestras,
             viviendas,
             visitas,
             personas,
@@ -169,7 +171,7 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
             areaField.sequence = {prefix:undefined, firstValue:1, name:'areas_seq' };
             areaField.nullable = true;
             tableDef.fields.splice(2,0,
-                {name:'muestra'           , typeName:'bigint'},
+                {name:'muestra'           , typeName:'integer'},
                 {name:'comuna'            , typeName:'text', nullable:false},
                 {name:'fraccion'          , typeName:'text', nullable:false},
                 {name:'radio'             , typeName:'text', nullable:false},
@@ -177,7 +179,6 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
                 {name:'relevamiento'      , typeName:'text'},
             );
             tableDef.hiddenColumns = (tableDef.hiddenColumns || []).concat('area');
-            tableDef.title = 'muestra_manzanas (areas)';
             tableDef.sortColumns = [
                 {column: 'comuna'   },
                 {column: 'fraccion' },
@@ -188,8 +189,11 @@ export function emergeAppdud<T extends Constructor<dmencu.AppAppDmEncuType>>(Bas
                 tableDef.sql.from = tableDef.sql.from.replace('as comuna', 'as auxcomuna');
             }
             tableDef.foreignKeys = (tableDef.foreignKeys || []).concat(
-                {references:'muestras', fields:['operativo','muestra']},
-                {references:'manzanas', fields:['comuna', 'fraccion', 'radio', 'manzana']},
+                {references:'muestras'     , fields:['operativo','muestra']},
+                {references:'comunas'      , fields:['comuna']},
+                {references:'fracciones'   , fields:['comuna', 'fraccion']},
+                {references:'radios'       , fields:['comuna', 'fraccion', 'radio']},
+                {references:'manzanas'     , fields:['comuna', 'fraccion', 'radio', 'manzana']},
                 {references:'relevamientos', fields:['relevamiento']}
             )
             tableDef.constraints = (tableDef.constraints || []).concat(

@@ -10,8 +10,8 @@ export function muestras(context:TableContext):TableDefinition {
         elementName:'muestra',
         editable:esEditable,
         fields:[
-            {name:'operativo'             , typeName: "text"   , nullable: false, editable: false},
-            {name:'muestra'               , typeName:'bigint', sequence:{prefix:null, firstValue:10001, name:'muestras_seq' }, nullable:true, editable:false   },
+            {name:'operativo'             , typeName: "text" , nullable: false},
+            {name:'muestra'               , typeName:'integer', sequence:{prefix:undefined, firstValue:1, name:'muestras_seq' }, nullable:true, editable:false   },
             {name:'nombre'                , typeName:'text'},
             {name:'proyecto_estadistico'  , typeName:'text', nullable:false},            
             {name:'planificado_desde'     , typeName:'date'},
@@ -21,9 +21,12 @@ export function muestras(context:TableContext):TableDefinition {
             //falta definir estados
         ],
         primaryKey:['operativo','muestra'],
-        foreignKeys:[{references:'proyectos_estadisticos', fields:['operativo','proyecto_estadistico']}],
+        foreignKeys:[
+            {references:'operativos', fields:['operativo']},
+            {references:'proyectos_estadisticos', fields:['operativo','proyecto_estadistico']}
+        ],
         detailTables: [
-            {table: "areas", fields: ["operativo","muestra"], abr: "man", label:"manzanas"}
+            {table: "muestra_manzanas", fields: ["operativo","muestra"], abr: "man", label:"manzanas"}
         ],
     };
 }
